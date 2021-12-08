@@ -2,12 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Statistics.module.css';
 
-export default function Statistics({ stat, total, positivePercentage }) {
+export default function Statistics({
+  options,
+  stat,
+  total,
+  positivePercentage,
+}) {
   return (
     <div>
-      {stat.map(([name, value]) => (
-        <p className={s.option} key={name}>
-          {name}: {value}
+      {options.map((option, i) => (
+        <p className={s.option} key={option}>
+          {option}: {stat[i]}
         </p>
       ))}
       <p className={s.total}>Total: {total}</p>
@@ -19,6 +24,7 @@ export default function Statistics({ stat, total, positivePercentage }) {
 }
 Statistics.propTypes = {
   options: PropTypes.array.isRequired,
+  stat: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   positivePercentage: PropTypes.number.isRequired,
 };
