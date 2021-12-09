@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Section from '../Section';
 import FeedbackOptions from '../FeedbackOptions';
 import Statistics from '../Statistics';
@@ -8,9 +8,8 @@ const OPTIONS = ['good', 'neutral', 'bad'];
 
 export default function App() {
   const [values, setValues] = useState([0, 0, 0]);
-  const [update, setUpdate] = useState(false);
-  const total = useRef(0);
-  const positive = useRef(0);
+  const [total, setTotal] = useState(0);
+  const [positive, setPositive] = useState(0);
 
   const incrementValue = e => {
     const idx = OPTIONS.indexOf(e.target.innerHTML);
@@ -22,10 +21,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    total.current = values.reduce((sum, value) => sum + value, 0);
-    if (total) positive.current = Math.round((values[0] / total.current) * 100);
-    setUpdate(!update);
-  }, [values, update]);
+    const tempTotal = values.reduce((sum, value) => sum + value, 0);
+    setTotal(tempTotal);
+    if (tempTotal) setPositive(Math.round((values[0] / tempTotal) * 100));
+  }, [values]);
 
   return (
     <div>
@@ -33,15 +32,15 @@ export default function App() {
         <FeedbackOptions options={OPTIONS} onLeaveFeedback={incrementValue} />
       </Section>
       <Section title="Statistics">
-        {!!total.current && (
+        {!!total && (
           <Statistics
             options={OPTIONS}
             stat={values}
-            total={total.current}
-            positivePercentage={positive.current}
+            total={total}
+            positivePercentage={positive}
           />
         )}
-        {!total.current && <Notification message="There is no feedback" />}
+        {!total && <Notification message="There is no feedback" />}
       </Section>
     </div>
   );
