@@ -5,9 +5,9 @@ import s from './Statistics.module.css';
 export default function Statistics({ statistics, total, positivePercentage }) {
   return (
     <ul className={s.statistics}>
-      {statistics.map((option, i) => (
-        <li className={s.option} key={option[0]}>
-          {option[0]}: {option[1]}
+      {statistics.map(([key, value], i) => (
+        <li className={s.option} key={key}>
+          {key}: {value}
         </li>
       ))}
       <li className={s.total}>Total: {total}</li>
