@@ -1,46 +1,46 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Section from '../Section';
 import FeedbackOptions from '../FeedbackOptions';
 import Statistics from '../Statistics';
 import Notification from '../Notification';
 
-const OPTIONS = ['good', 'neutral', 'bad'];
+const initialOptions = { good: 0, neutral: 0, bad: 0 };
 
 export default function App() {
-  const [values, setValues] = useState([0, 0, 0]);
-  const [total, setTotal] = useState(0);
-  const [positive, setPositive] = useState(0);
+  const [values, setValues] = useState(initialOptions);
 
   const incrementValue = e => {
-    const idx = OPTIONS.indexOf(e.target.innerHTML);
-    setValues(prevArr => [
-      ...values.slice(0, idx),
-      prevArr[idx] + 1,
-      ...values.slice(idx + 1),
-    ]);
+    const option = e.target.innerHTML;
+    setValues(prevState => ({ ...prevState, [option]: prevState[option] + 1 }));
   };
 
-  useEffect(() => {
-    const tempTotal = values.reduce((sum, value) => sum + value, 0);
-    setTotal(tempTotal);
-    if (tempTotal) setPositive(Math.round((values[0] / tempTotal) * 100));
-  }, [values]);
+  const calculateTotal = () => {
+    return Object.values(values).reduce((sum, option) => sum + option, 0);
+  };
+  const total = calculateTotal();
+
+  const calculatePositivePercentage = () => {
+    return Math.round((values.good / total) * 100);
+  };
+  const positivePercentage = calculatePositivePercentage();
+
+  const options = Object.keys(values);
+  const statistics = Object.entries(values);
 
   return (
     <div>
       <Section title="Please leave feedback">
-        <FeedbackOptions options={OPTIONS} onLeaveFeedback={incrementValue} />
+        <FeedbackOptions options={options} onLeaveFeedback={incrementValue} />
       </Section>
       <Section title="Statistics">
-        {!!total && (
+        {total > 0 && (
           <Statistics
-            options={OPTIONS}
-            stat={values}
+            statistics={statistics}
             total={total}
-            positivePercentage={positive}
+            positivePercentage={positivePercentage}
           />
         )}
-        {!total && <Notification message="There is no feedback" />}
+        {total === 0 && <Notification message="There is no feedback" />}
       </Section>
     </div>
   );

@@ -2,29 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Statistics.module.css';
 
-export default function Statistics({
-  options,
-  stat,
-  total,
-  positivePercentage,
-}) {
+export default function Statistics({ statistics, total, positivePercentage }) {
   return (
-    <div>
-      {options.map((option, i) => (
-        <p className={s.option} key={option}>
-          {option}: {stat[i]}
-        </p>
+    <ul className={s.statistics}>
+      {statistics.map((option, i) => (
+        <li className={s.option} key={option[0]}>
+          {option[0]}: {option[1]}
+        </li>
       ))}
-      <p className={s.total}>Total: {total}</p>
-      <p className={s.percentage}>
+      <li className={s.total}>Total: {total}</li>
+      <li className={s.percentage}>
         Positive feedback: {positivePercentage + '%'}
-      </p>
-    </div>
+      </li>
+    </ul>
   );
 }
 Statistics.propTypes = {
-  options: PropTypes.array.isRequired,
-  stat: PropTypes.array.isRequired,
+  statistics: PropTypes.array.isRequired,
   total: PropTypes.number.isRequired,
   positivePercentage: PropTypes.number.isRequired,
 };
